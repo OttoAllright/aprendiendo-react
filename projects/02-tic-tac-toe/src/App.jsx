@@ -8,11 +8,18 @@ import { WinnerModal } from './components/WinnerModal.jsx'
 import { saveGameToStorage, resetGameStorage } from './logic/storage/index.js'
 
 function App () {
-  const [board, setBoard] = useState(() => {
-    const boardFromStorage = window.localStorage.getItem('board')
-    if (boardFromStorage) return JSON.parse(boardFromStorage)
-    return Array(9).fill(null)
-  })
+const [board, setBoard] = useState(() => {
+  const boardFromStorage = window.localStorage.getItem('board')
+  try {
+    const parsedBoard = JSON.parse(boardFromStorage)
+    if (Array.isArray(parsedBoard)) {
+      return parsedBoard
+    }
+  } catch (error) {
+    console.error('Error parsing board from localStorage:', error)
+  }
+  return Array(9).fill(null)
+})
 
   const [turn, setTurn] = useState(() => {
     const turnFromStorage = window.localStorage.getItem('turn')
